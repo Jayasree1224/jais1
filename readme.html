@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JAYASREE</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --mg:#ff00ff;--mg2:#cc44ff;--mg3:#8800cc;
+    --cyan:#00ffff;--gold:#ffd700;--dark:#06020f;
+    --d1:#0f0c29;--d2:#1a0533;--d3:#302b63;--d4:#24243e;
+  }
+  body{background:var(--dark);font-family:'Rajdhani',sans-serif;color:#fff;overflow-x:hidden;min-height:100vh}
+
+  /* ── STARFIELD ── */
+  #stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .star{position:absolute;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite alternate}
+  @keyframes twinkle{0%{opacity:.1;transform:scale(.8)}100%{opacity:1;transform:scale(1.3)}}
+
+  /* ── SCANLINE ── */
+  body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);pointer-events:none;z-index:9999}
+
+  .container{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:20px}
+
+  /* ── HEADER ── */
+  .header{text-align:center;padding:50px 20px 30px;position:relative}
+  .header-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(255,0,255,.18) 0%,transparent 70%);pointer-events:none}
+  .rank-badge{display:inline-block;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:var(--gold);border:1px solid var(--gold);padding:4px 16px;margin-bottom:20px;animation:pulse-gold 2s ease-in-out infinite}
+  @keyframes pulse-gold{0%,100%{box-shadow:0 0 4px var(--gold),inset 0 0 4px rgba(255,215,0,.1)}50%{box-shadow:0 0 16px var(--gold),inset 0 0 10px rgba(255,215,0,.2)}}
+  .main-title{font-family:'Orbitron',monospace;font-size:clamp(42px,8vw,80px);font-weight:900;letter-spacing:6px;line-height:1;background:linear-gradient(135deg,#fff 0%,var(--mg) 40%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:title-shimmer 3s linear infinite;background-size:200% 100%}
+  @keyframes title-shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+  .sub-title{font-family:'Orbitron',monospace;font-size:13px;letter-spacing:3px;color:var(--mg2);margin-top:12px;animation:fadeup .8s ease forwards;opacity:0;animation-delay:.4s}
+  @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .typing-line{font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--cyan);margin-top:16px;height:24px;overflow:hidden}
+  .typing-cursor{display:inline-block;animation:blink .7s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ── DIVIDER ── */
+  .divider{display:flex;align-items:center;gap:12px;margin:28px 0;opacity:.6}
+  .divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--mg),transparent)}
+  .divider-icon{font-size:14px;color:var(--mg);font-family:'Orbitron',monospace;letter-spacing:2px;white-space:nowrap}
+
+  /* ── CARDS ── */
+  .card{background:linear-gradient(135deg,rgba(15,12,41,.95),rgba(48,43,99,.6));border:1px solid rgba(255,0,255,.3);border-radius:8px;padding:24px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+  .card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--mg),transparent);animation:scan-line 4s linear infinite}
+  @keyframes scan-line{0%{left:-100%}100%{left:100%}}
+  .card:hover{border-color:var(--mg);box-shadow:0 0 30px rgba(255,0,255,.25),inset 0 0 30px rgba(255,0,255,.05)}
+  .card-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;color:var(--mg);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .card-title::before{content:'';display:inline-block;width:8px;height:8px;background:var(--mg);border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite}
+  @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+
+  /* ── TWO COLUMNS ── */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:600px){.two-col{grid-template-columns:1fr}}
+
+  /* ── PROFILE CARD ── */
+  .profile-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .profile-key{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,0,255,.6);min-width:80px}
+  .profile-val{font-family:'Share Tech Mono',monospace;font-size:13px;color:#e0d0ff}
+  .profile-sep{color:var(--mg2);margin:0 4px}
+
+  /* ── SKILL BARS ── */
+  .skill-row{margin-bottom:12px}
+  .skill-header{display:flex;justify-content:space-between;margin-bottom:5px}
+  .skill-name{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:#cbb8ff}
+  .skill-pct{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--mg)}
+  .skill-track{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;position:relative}
+  .skill-fill{height:100%;border-radius:3px;position:relative;animation:fill-in 1.4s cubic-bezier(.4,0,.2,1) forwards;width:0}
+  .skill-fill::after{content:'';position:absolute;right:0;top:0;width:6px;height:100%;background:#fff;border-radius:50%;filter:blur(2px)}
+  @keyframes fill-in{to{width:var(--w)}}
+  .bar-mg{background:linear-gradient(90deg,var(--mg3),var(--mg))}
+  .bar-cyan{background:linear-gradient(90deg,#004466,var(--cyan))}
+  .bar-gold{background:linear-gradient(90deg,#664400,var(--gold))}
+  .bar-purple{background:linear-gradient(90deg,#330066,#aa44ff)}
+
+  /* ── WEAPON SECTION ── */
+  .weapon-header{text-align:center;padding:16px 0 8px;font-family:'Orbitron',monospace;font-size:14px;letter-spacing:4px;color:var(--mg);text-shadow:0 0 20px var(--mg);animation:flicker 4s ease-in-out infinite}
+  @keyframes flicker{0%,95%,100%{opacity:1}96%,98%{opacity:.3}}
+
+  /* ── TECH GRID ── */
+  .tech-section{margin-bottom:24px}
+  .tech-section-title{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:14px;text-align:center}
+  .tech-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px}
+  .tech-pill{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:4px;border:1px solid rgba(255,0,255,.25);background:rgba(48,43,99,.4);transition:all .3s;cursor:default}
+  .tech-pill:hover{border-color:var(--mg);background:rgba(255,0,255,.1);box-shadow:0 0 16px rgba(255,0,255,.2);transform:translateY(-2px)}
+  .tech-icon{font-size:16px}
+  .tech-name{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:1px;color:#ddd}
+  .tech-bar-wrap{width:100%;margin-top:6px}
+  .tech-mini-bar{height:3px;border-radius:2px;animation:fill-in 1.6s cubic-bezier(.4,0,.2,1) forwards;width:0}
+
+  /* ── QUEST LIST ── */
+  .quest-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-left:2px solid rgba(255,0,255,.4);margin-bottom:8px;background:rgba(255,0,255,.04);border-radius:0 4px 4px 0;transition:all .3s;animation:slide-in .5s ease forwards;opacity:0}
+  .quest-item:hover{border-left-color:var(--mg);background:rgba(255,0,255,.1);transform:translateX(4px)}
+  @keyframes slide-in{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+  .quest-check{font-size:14px;color:var(--mg)}
+  .quest-text{font-family:'Share Tech Mono',monospace;font-size:13px;color:#d0b8ff}
+
+  /* ── CONNECT ── */
+  .connect-grid{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .connect-btn{display:flex;align-items:center;gap:10px;padding:12px 24px;border:1px solid rgba(255,0,255,.4);border-radius:4px;background:rgba(26,0,43,.8);text-decoration:none;color:#fff;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;transition:all .3s;position:relative;overflow:hidden}
+  .connect-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,0,255,.15),transparent);transition:left .4s}
+  .connect-btn:hover::before{left:100%}
+  .connect-btn:hover{border-color:var(--mg);box-shadow:0 0 20px rgba(255,0,255,.3);transform:translateY(-2px)}
+  .connect-icon{font-size:18px}
+
+  /* ── FOOTER QUOTE ── */
+  .footer-quote{text-align:center;padding:40px 20px 50px;font-family:'Orbitron',monospace;font-size:13px;letter-spacing:2px;color:rgba(204,136,255,.8);position:relative}
+  .footer-quote::before{content:'⚔️';display:block;font-size:28px;margin-bottom:12px;animation:sword-spin 6s ease-in-out infinite}
+  @keyframes sword-spin{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+
+  /* ── CORNER DECORATIONS ── */
+  .corner{position:absolute;width:16px;height:16px;opacity:.6}
+  .corner-tl{top:8px;left:8px;border-top:2px solid var(--mg);border-left:2px solid var(--mg)}
+  .corner-tr{top:8px;right:8px;border-top:2px solid var(--mg);border-right:2px solid var(--mg)}
+  .corner-bl{bottom:8px;left:8px;border-bottom:2px solid var(--mg);border-left:2px solid var(--mg)}
+  .corner-br{bottom:8px;right:8px;border-bottom:2px solid var(--mg);border-right:2px solid var(--mg)}
+
+  /* ── HEX DECORATION ── */
+  .hex-row{display:flex;justify-content:center;gap:6px;margin:10px 0;opacity:.3}
+  .hex{width:10px;height:10px;background:var(--mg);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);animation:hex-pulse 2s ease-in-out infinite}
+  .hex:nth-child(2){animation-delay:.2s}.hex:nth-child(3){animation-delay:.4s}.hex:nth-child(4){animation-delay:.6s}.hex:nth-child(5){animation-delay:.8s}
+  @keyframes hex-pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+  /* ── STAT CHIPS ── */
+  .stat-chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .stat-chip{padding:6px 14px;border-radius:3px;font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;border:1px solid;animation:chip-glow 3s ease-in-out infinite}
+  .chip-mg{color:var(--mg);border-color:rgba(255,0,255,.5);background:rgba(255,0,255,.08)}
+  .chip-cyan{color:var(--cyan);border-color:rgba(0,255,255,.5);background:rgba(0,255,255,.06)}
+  .chip-gold{color:var(--gold);border-color:rgba(255,215,0,.5);background:rgba(255,215,0,.06)}
+  @keyframes chip-glow{0%,100%{box-shadow:0 0 4px currentColor}50%{box-shadow:0 0 12px currentColor}}
+</style>
+</head>
+<body>
+
+<!-- STARFIELD -->
+<canvas id="stars"></canvas>
+
+<div class="container">
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="header-glow"></div>
+    <div class="main-title">◈ JAYASREE ◈</div>
+    <div class="typing-line"><span id="typing"></span><span class="typing-cursor">█</span></div>
+    <div class="stat-chips" style="margin-top:20px">
+      <div class="stat-chip chip-mg">🟣 INDIA</div>
+      <div class="stat-chip chip-cyan">⚡ ALWAYS IMPROVING</div>
+      <div class="stat-chip chip-gold">👑 FULL STACK BEAST</div>
+    </div>
+  </div>
+
+  <div class="hex-row"><div class="hex"></div><div class="hex"></div><div class="hex"></div><div class="hex"></div><div class="hex"></div></div>
+
+  <!-- ══ PROFILE + SKILLS ══ -->
+  <div class="two-col" style="margin-bottom:16px">
+
+    <div class="card">
+      <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+      <div class="card-title">🧠 IDENTITY CARD</div>
+      <div class="profile-row"><span class="profile-key">Name</span><span class="profile-sep">:</span><span class="profile-val">Jayasree</span></div>
+      <div class="profile-row"><span class="profile-key">Mission</span><span class="profile-sep">:</span><span class="profile-val">Build · Learn · Execute</span></div>
+      <div class="profile-row"><span class="profile-key">Location</span><span class="profile-sep">:</span><span class="profile-val">India 🇮🇳</span></div>
+      <div class="profile-row"><span class="profile-key">Status</span><span class="profile-sep">:</span><span class="profile-val">Always Improving ⬆</span></div>
+      <div class="profile-row"><span class="profile-key">Mode</span><span class="profile-sep">:</span><span class="profile-val">Full-Stack Beast 💻</span></div>
+    </div>
+
+    <div class="card">
+      <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+      <div class="card-title">📊 SKILL STATUS PANEL</div>
+      <div class="skill-row">
+        <div class="skill-header"><span class="skill-name">JAVA</span><span class="skill-pct">95%</span></div>
+        <div class="skill-track"><div class="skill-fill bar-mg" style="--w:95%;animation-delay:.1s"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-header"><span class="skill-name">DATA STRUCTURES</span><span class="skill-pct">70%</span></div>
+        <div class="skill-track"><div class="skill-fill bar-cyan" style="--w:70%;animation-delay:.2s"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-header"><span class="skill-name">AI TOOLS</span><span class="skill-pct">80%</span></div>
+        <div class="skill-track"><div class="skill-fill bar-purple" style="--w:80%;animation-delay:.3s"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-header"><span class="skill-name">PROBLEM SOLVING</span><span class="skill-pct">75%</span></div>
+        <div class="skill-track"><div class="skill-fill bar-gold" style="--w:75%;animation-delay:.4s"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-header"><span class="skill-name">FULL STACK</span><span class="skill-pct">78%</span></div>
+        <div class="skill-track"><div class="skill-fill bar-mg" style="--w:78%;animation-delay:.5s"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-header"><span class="skill-name">CREATIVITY</span><span class="skill-pct">80%</span></div>
+        <div class="skill-track"><div class="skill-fill bar-cyan" style="--w:80%;animation-delay:.6s"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WEAPON INVENTORY ══ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-icon">⚔ WEAPON INVENTORY ⚔</div><div class="divider-line"></div></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+    <div class="weapon-header">⚡ TECHNOLOGIES ⚡</div>
+
+    <div class="tech-section">
+      <div class="tech-section-title">💻 PROGRAMMING CORE</div>
+      <div class="tech-grid">
+        <div class="tech-pill">
+          <span class="tech-icon">☕</span>
+          <div><div class="tech-name">JAVA</div>
+          <div class="tech-bar-wrap"><div class="tech-mini-bar bar-mg" style="--w:95%;animation-delay:.2s"></div></div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--mg);margin-top:2px">95%</div></div>
+        </div>
+        <div class="tech-pill">
+          <span class="tech-icon">⚡</span>
+          <div><div class="tech-name">JAVASCRIPT</div>
+          <div class="tech-bar-wrap"><div class="tech-mini-bar bar-gold" style="--w:70%;animation-delay:.3s"></div></div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);margin-top:2px">70%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tech-section">
+      <div class="tech-section-title">🌐 WEB DEVELOPMENT STACK</div>
+      <div class="tech-grid">
+        <div class="tech-pill"><span class="tech-icon">🌐</span><div><div class="tech-name">HTML5</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-mg" style="--w:98%;animation-delay:.2s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--mg);margin-top:2px">98%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">🎨</span><div><div class="tech-name">CSS3</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-cyan" style="--w:80%;animation-delay:.3s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyan);margin-top:2px">80%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">⚛</span><div><div class="tech-name">REACT</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-cyan" style="--w:60%;animation-delay:.4s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyan);margin-top:2px">60%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">🟢</span><div><div class="tech-name">NODE.JS</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-purple" style="--w:75%;animation-delay:.5s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#aa44ff;margin-top:2px">75%</div></div></div>
+      </div>
+    </div>
+
+    <div class="tech-section">
+      <div class="tech-section-title">🗄 DATABASE SYSTEMS</div>
+      <div class="tech-grid">
+        <div class="tech-pill"><span class="tech-icon">🍃</span><div><div class="tech-name">MONGODB</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-mg" style="--w:70%;animation-delay:.2s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--mg);margin-top:2px">70%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">🐬</span><div><div class="tech-name">MYSQL</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-gold" style="--w:80%;animation-delay:.3s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);margin-top:2px">80%</div></div></div>
+      </div>
+    </div>
+
+    <div class="tech-section" style="margin-bottom:0">
+      <div class="tech-section-title">🧰 DEVELOPER TOOLKIT</div>
+      <div class="tech-grid">
+        <div class="tech-pill"><span class="tech-icon">🐙</span><div><div class="tech-name">GIT</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-mg" style="--w:90%;animation-delay:.2s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--mg);margin-top:2px">90%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">💻</span><div><div class="tech-name">VS CODE</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-cyan" style="--w:100%;animation-delay:.3s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyan);margin-top:2px">100%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">🖌</span><div><div class="tech-name">FIGMA</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-purple" style="--w:90%;animation-delay:.4s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#aa44ff;margin-top:2px">90%</div></div></div>
+        <div class="tech-pill"><span class="tech-icon">🎨</span><div><div class="tech-name">CANVA</div><div class="tech-bar-wrap"><div class="tech-mini-bar bar-gold" style="--w:100%;animation-delay:.5s"></div></div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);margin-top:2px">100%</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ QUESTS ══ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-icon">🎯 ACTIVE QUESTS</div><div class="divider-line"></div></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+    <div class="card-title">🎯 CURRENT QUEST BOARD</div>
+    <div class="quest-item" style="animation-delay:.1s"><span class="quest-check">✅</span><span class="quest-text">Master Data Structures &amp; Algorithms</span></div>
+    <div class="quest-item" style="animation-delay:.2s"><span class="quest-check">✅</span><span class="quest-text">Build MERN Stack Applications</span></div>
+    <div class="quest-item" style="animation-delay:.3s"><span class="quest-check">✅</span><span class="quest-text">Develop AI Productivity Tools</span></div>
+    <div class="quest-item" style="animation-delay:.4s"><span class="quest-check">✅</span><span class="quest-text">Maintain Daily GitHub Streak 🔥</span></div>
+    <div class="quest-item" style="animation-delay:.5s"><span class="quest-check">✅</span><span class="quest-text">Create Real World Impact Projects</span></div>
+    <div class="quest-item" style="animation-delay:.6s"><span class="quest-check">✅</span><span class="quest-text">Contribute to Open Source 🌍</span></div>
+  </div>
+
+  <!-- ══ CONNECT ══ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-icon">📡 CONNECT</div><div class="divider-line"></div></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+    <div class="card-title">📡 CONNECT WITH ME</div>
+    <div class="connect-grid">
+      <a href="https://www.linkedin.com/in/jayasree1224" class="connect-btn" target="_blank">
+        <span class="connect-icon">💼</span> LINKEDIN
+      </a>
+      <a href="mailto:1224jayasree@gmail.com" class="connect-btn">
+        <span class="connect-icon">✉️</span> 1224JAYASREE@GMAIL.COM
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer-quote">
+    <div style="font-size:12px;letter-spacing:1px;margin-bottom:6px;color:rgba(204,136,255,.5)">◈ ◈ ◈</div>
+    Ideas are common. Execution is rare. I focus on execution.
+    <div style="font-size:12px;letter-spacing:1px;margin-top:6px;color:rgba(204,136,255,.5)">◈ ◈ ◈</div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── STARFIELD ──
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [];
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+function initStars() {
+  stars = Array.from({length: 180}, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    r: Math.random() * 1.6 + .2,
+    a: Math.random(), da: (Math.random() - .5) * .01,
+    color: ['#ff00ff','#cc88ff','#00ffff','#ffffff','#ffd700'][Math.floor(Math.random()*5)]
+  }));
+}
+function drawStars() {
+  ctx.clearRect(0, 0, W, H);
+  stars.forEach(s => {
+    s.a = Math.max(0.05, Math.min(1, s.a + s.da));
+    if (s.a <= .05 || s.a >= 1) s.da *= -1;
+    ctx.globalAlpha = s.a;
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars(); drawStars();
+
+// ── TYPING ANIMATION ──
+const lines = [
+  'Future Software Engineer!!',
+  'Building Solutions That Matter!!',
+  'Leveling Up Every Day!!',
+  'Ideas Are Common. Execution Is Rare.'
+];
+let li = 0, ci = 0, del = false;
+const el = document.getElementById('typing');
+function type() {
+  const line = lines[li];
+  if (!del) {
+    el.textContent = line.slice(0, ++ci);
+    if (ci === line.length) { del = true; setTimeout(type, 1800); return; }
+    setTimeout(type, 55);
+  } else {
+    el.textContent = line.slice(0, --ci);
+    if (ci === 0) { del = false; li = (li + 1) % lines.length; setTimeout(type, 400); return; }
+    setTimeout(type, 28);
+  }
+}
+setTimeout(type, 800);
+
+// ── QUEST SLIDE-IN ON SCROLL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
+}, {threshold: .2});
+document.querySelectorAll('.quest-item').forEach(q => observer.observe(q));
+</script>
+</body>
+</html>
